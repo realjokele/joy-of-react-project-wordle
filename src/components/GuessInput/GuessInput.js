@@ -1,6 +1,6 @@
 import React from "react";
 
-export function GuessInput({}) {
+export function GuessInput({ newGuess }) {
   const [guess, setGuess] = React.useState("");
 
   const handleGuess = (event) => {
@@ -9,6 +9,7 @@ export function GuessInput({}) {
       window.alert("Your guess has to be 5 characters long.");
       return;
     }
+    newGuess(guess);
     console.log("Guess submitted:", guess);
     setGuess("");
   };
@@ -27,6 +28,8 @@ export function GuessInput({}) {
         required
         minLength={5}
         maxLength={5}
+        pattern="[a-zA-Z]{5}"
+        title="5 letter word"
         id="guess-input"
         type="text"
         value={guess}

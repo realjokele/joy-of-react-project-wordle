@@ -1,6 +1,6 @@
 import React from "react";
 
-export function GuessInput({ newGuess }) {
+export function GuessInput({ newGuess, disabled }) {
   const [guess, setGuess] = React.useState("");
 
   const handleGuess = (event) => {
@@ -26,6 +26,7 @@ export function GuessInput({ newGuess }) {
       <label htmlFor="guess-input">Enter guess:</label>
       <input
         required
+        disabled={disabled}
         minLength={5}
         maxLength={5}
         pattern="[a-zA-Z]{5}"

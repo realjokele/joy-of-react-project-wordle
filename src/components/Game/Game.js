@@ -1,11 +1,10 @@
 import React from "react";
 
-import { sample, range } from "../../utils";
+import { sample } from "../../utils";
 import { WORDS } from "../../data";
-import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 import { GuessInput } from "../GuessInput";
 import { GuessList } from "../GuessList";
-import { Guess } from "../Guess";
+import { checkGuess } from "../../game-helpers";
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -16,7 +15,7 @@ function Game() {
   const [guesses, setGuesses] = React.useState([]);
 
   const newGuess = (newGuess) => {
-    const newGuesses = [...guesses, newGuess];
+    const newGuesses = [...guesses, checkGuess(newGuess, answer)];
     setGuesses(newGuesses);
   };
 

@@ -10,14 +10,9 @@ import { checkGuess } from "../../game-helpers";
 const GAME_OVER_WON = "WON";
 const GAME_OVER_LOST = "LOST";
 
-// Pick a random word on every pageload.
-const answer = sample(WORDS);
-// To make debugging easier, we'll log the solution in the console.
-console.info({ answer });
-
-function HappyBanner({ numberOfGuesses }) {
+function HappyBanner({ numberOfGuesses, restartGame }) {
   return (
-    <div class="happy banner">
+    <div className="happy banner">
       <p>
         <strong>Congratulations!</strong> Got it in{" "}
         <strong>
@@ -25,16 +20,18 @@ function HappyBanner({ numberOfGuesses }) {
         </strong>
         .
       </p>
+      <button onClick={restartGame}>Play agin?</button>
     </div>
   );
 }
 
-function SadBanner({ answer }) {
+function SadBanner({ answer, restartGame }) {
   return (
-    <div class="sad banner">
+    <div className="sad banner">
       <p>
         Sorry, the correct answer is <strong>{answer}</strong>.
       </p>
+      <button onClick={restartGame}>Play agin?</button>
     </div>
   );
 }
@@ -42,6 +39,16 @@ function SadBanner({ answer }) {
 function Game() {
   const [guesses, setGuesses] = React.useState([]);
   const [gameOver, setGameOver] = React.useState(undefined);
+  const [answer, setAnswer] = React.useState(() => sample(WORDS));
+
+  // To make debugging easier, we'll log the solution in the console.
+  console.info({ answer });
+
+  const restartGame = () => {
+    setGuesses([]);
+    setGameOver(undefined);
+    setAnswer(sample(WORDS));
+  };
 
   const newGuess = (newGuess) => {
     const newGuesses = [...guesses, checkGuess(newGuess, answer)];
@@ -58,9 +65,14 @@ function Game() {
       <GuessList guesses={guesses} />
       <GuessInput newGuess={newGuess} disabled={gameOver} />
       {gameOver === GAME_OVER_WON && (
-        <HappyBanner numberOfGuesses={guesses.length} />
+        <HappyBanner
+          numberOfGuesses={guesses.length}
+          restartGame={restartGame}
+        />
       )}
-      {gameOver === GAME_OVER_LOST && <SadBanner answer={answer} />}
+      {gameOver === GAME_OVER_LOST && (
+        <SadBanner answer={answer} restartGame={restartGame} />
+      )}
     </>
   );
 }

@@ -6,9 +6,20 @@ import { WORDS } from "../../data";
 import { GuessInput } from "../GuessInput";
 import { GuessList } from "../GuessList";
 import { checkGuess } from "../../game-helpers";
+import { Keyboard } from "../Keyboard/Keyboard";
 
 const GAME_OVER_WON = "WON";
 const GAME_OVER_LOST = "LOST";
+
+function getEmptyKeyboardStatus() {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let emptyKeyboardStatus = alphabet.split("").reduce((acc, char) => {
+    acc[char] = "neutral";
+    return acc;
+  }, {});
+
+  return emptyKeyboardStatus;
+}
 
 function HappyBanner({ numberOfGuesses, restartGame }) {
   return (
@@ -40,6 +51,9 @@ function Game() {
   const [guesses, setGuesses] = React.useState([]);
   const [gameOver, setGameOver] = React.useState(undefined);
   const [answer, setAnswer] = React.useState(() => sample(WORDS));
+  const [keyboardStatus, setKeyboardStatus] = React.useState(() =>
+    getEmptyKeyboardStatus()
+  );
 
   // To make debugging easier, we'll log the solution in the console.
   console.info({ answer });
@@ -48,11 +62,16 @@ function Game() {
     setGuesses([]);
     setGameOver(undefined);
     setAnswer(sample(WORDS));
+    setKeyboardStatus(getEmptyKeyboardStatus());
   };
 
-  const newGuess = (newGuess) => {
-    const newGuesses = [...guesses, checkGuess(newGuess, answer)];
+  const handleNewGuess = (newGuess) => {
+    const checkedGuess = checkGuess(newGuess, answer);
+    const newGuesses = [...guesses, checkedGuess];
+
     setGuesses(newGuesses);
+    updateKeyboardStatus(checkedGuess);
+
     if (newGuess === answer) {
       setGameOver(GAME_OVER_WON);
     } else if (newGuesses.length >= NUM_OF_GUESSES_ALLOWED) {
@@ -60,10 +79,21 @@ function Game() {
     }
   };
 
+  const updateKeyboardStatus = (checkedGuess) => {
+    const newKeyboardStatus = { ...keyboardStatus };
+
+    checkedGuess.map(
+      ({ letter, status }) => (newKeyboardStatus[letter] = status)
+    );
+
+    setKeyboardStatus(newKeyboardStatus);
+  };
+
   return (
     <>
       <GuessList guesses={guesses} />
-      <GuessInput newGuess={newGuess} disabled={gameOver} />
+      <GuessInput newGuess={handleNewGuess} disabled={gameOver} />
+      <Keyboard status={keyboardStatus} />
       {gameOver === GAME_OVER_WON && (
         <HappyBanner
           numberOfGuesses={guesses.length}

@@ -10,7 +10,6 @@ export function GuessInput({ newGuess, disabled }) {
       return;
     }
     newGuess(guess);
-    console.log("Guess submitted:", guess);
     setGuess("");
   };
 

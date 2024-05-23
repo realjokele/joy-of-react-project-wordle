@@ -196,6 +196,46 @@ h1 {
   border: 0;
 }
 
+.key {
+  display: grid;
+  place-content: center;
+  border: 2px solid var(--color-gray-700);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 900;
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.key.neutral {
+  background-color: aliceblue;
+}
+
+.key.correct {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+.key.incorrect {
+  background: var(--color-gray-300);
+  border-color: var(--color-gray-300);
+  color: white;
+}
+.key.misplaced {
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+  color: white;
+}
+
+.keyboard-layout {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 4px;
+}
+
 /*
   Modal styles
 
